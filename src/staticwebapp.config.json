@@ -1,12 +1,12 @@
 {
   "routes": [
+        {
+      "route": "/api/*",
+      "allowedRoles": ["authenticated"]
+    },
     {
       "route": "/*",
       "allowedRoles": ["reader"]
-    },
-    {
-      "route": "/api/*",
-      "allowedRoles": ["authenticated"]
     }
   ],
   "responseOverrides": {
