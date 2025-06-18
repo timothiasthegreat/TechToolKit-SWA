@@ -10,8 +10,5 @@
       "statusCode": 302,
       "redirect": "/.auth/login/aad"
     }
-  },
-  "platform": {
-    "apiRuntime": "node:16"
   }
 }

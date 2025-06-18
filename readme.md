@@ -1,7 +1,21 @@
-# Vanilla JavaScript App
+# TechToolKit-SWA
 
-[Azure Static Web Apps](https://docs.microsoft.com/azure/static-web-apps/overview) allows you to easily build JavaScript apps in minutes. Use this repo with the [quickstart](https://docs.microsoft.com/azure/static-web-apps/getting-started?tabs=vanilla-javascript) to build and customize a new static site.
+TechToolKit-SWA is a static web application built using vanilla JavaScript and hosted on Azure Static Web Apps. This repository serves as the front-end for the TechToolKit project.
 
-This repo is used as a starter for a _very basic_ HTML web application using no front-end frameworks.
+## Prerequisites
 
-This repo has a dev container. This means if you open it inside a [GitHub Codespace](https://github.com/features/codespaces), or using [VS Code with the remote containers extension](https://code.visualstudio.com/docs/remote/containers), it will be opened inside a container with all the dependencies already installed.
+This application requires a function app deployed from the [timothiasthegreat/TechToolKit-API](https://github.com/timothiasthegreat/TechToolKit-API) repository. Ensure the function app is deployed and accessible before running this application.
+
+## Features
+
+- Basic HTML web application with no front-end frameworks.
+- Integration with Azure Function App for backend functionality.
+- Dev container support for seamless development in GitHub Codespaces or VS Code with the remote containers extension.
+
+## Deployment
+
+Deploy this application to Azure Static Web Apps by following the [Azure Static Web Apps documentation](https://docs.microsoft.com/azure/static-web-apps/overview).
+
+## License
+
+This project is licensed under the MIT License.
