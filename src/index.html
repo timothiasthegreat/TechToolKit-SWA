@@ -1,17 +1,105 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="styles.css">
-  <title>Vanilla JavaScript App</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tool Downloads</title>
+  <style>
+    body { font-family: Arial; margin: 2rem; background: #f9f9f9; }
+    .tool { background: #fff; padding: 1rem; margin-bottom: 1rem; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    button { margin-left: 1rem; padding: 0.5rem 1rem; }
+  </style>
 </head>
-
 <body>
-  <main>
-    <h1>Vanilla JavaScript App</h1>
-  </main>
-</body>
+  <h1>Available Tools</h1>
+  <div id="toolList">Loading...</div>
 
+  <script>
+    // Use environment variables for API URLs
+    
+    async function fetchTools() {
+      const container = document.getElementById('toolList');
+      container.innerHTML = '';
+
+      try {
+        const response = await fetch('/api/ListTools');
+
+        if (!response.ok) {
+          throw new Error(`Server responded with status ${response.status}`);
+        }
+
+        let result;
+        try {
+          result = await response.json();
+        } catch (jsonErr) {
+          throw new Error('Failed to parse server response.');
+        }
+
+        // Expecting { tools: [...] }
+        if (!result || !Array.isArray(result.tools)) {
+          throw new Error('Unexpected data format from server.');
+        }
+
+        const tools = result.tools;
+
+        if (tools.length === 0) {
+          container.innerHTML = '<p>No tools found.</p>';
+          return;
+        }
+
+        tools.forEach(tool => {
+          const div = document.createElement('div');
+          div.className = 'tool';
+          div.innerHTML = `
+            <strong>${tool}</strong>
+            <button onclick="copySasUrl('${tool}', this)">Copy SAS URL</button>
+          `;
+          container.appendChild(div);
+        });
+      } catch (err) {
+        container.innerHTML = `<p style="color:red;">Error loading tools: ${err.message}</p>`;
+        console.error('Error in fetchTools:', err);
+      }
+    }
+
+    async function copySasUrl(blobName, button) {
+      button.disabled = true;
+      button.textContent = 'Generating...';
+
+      try {
+        const url = `/api/GetSASUrl?blobName=${encodeURIComponent(blobName)}`;
+        const response = await fetch(url);
+
+        if (!response.ok) {
+          throw new Error(`Server responded with status ${response.status}`);
+        }
+
+        let data;
+        try {
+          data = await response.json();
+        } catch (jsonErr) {
+          throw new Error('Failed to parse server response.');
+        }
+
+        if (!data.sasUrl) {
+          throw new Error('No download URL returned from server.');
+        }
+
+        await navigator.clipboard.writeText(data.sasUrl);
+        button.textContent = 'Copied!';
+      } catch (err) {
+        button.textContent = 'Error';
+        alert(`Failed to copy SAS URL: ${err.message}`);
+        console.error('Failed to copy SAS URL:', err);
+      } finally {
+        setTimeout(() => {
+          button.disabled = false;
+          button.textContent = 'Copy SAS URL';
+        }, 2000);
+      }
+    }
+
+    fetchTools();
+  </script>
+</body>
 </html>
