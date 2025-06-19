@@ -8,6 +8,7 @@
     body { font-family: Arial; margin: 2rem; background: #f9f9f9; }
     .tool { background: #fff; padding: 1rem; margin-bottom: 1rem; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
     button { margin-left: 1rem; padding: 0.5rem 1rem; }
+    #tagForm { background: #fff; padding: 1rem; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 1rem; }
   </style>
 </head>
 <body>
@@ -50,9 +51,14 @@
         tools.forEach(tool => {
           const div = document.createElement('div');
           div.className = 'tool';
+
+          const tags = Object.entries(tool.Tags).map(([key, value]) => `<span>${key}: ${value}</span>`).join(', ');
+
           div.innerHTML = `
-            <strong>${tool}</strong>
-            <button onclick="copySasUrl('${tool}', this)">Copy SAS URL</button>
+            <strong>${tool.Name}</strong>
+            <div>Tags: ${tags || 'None'}</div>
+            <button onclick="copySasUrl('${tool.Name}', this)">Copy SAS URL</button>
+            <button onclick="openTagForm('${tool.Name}')">Set Tags</button>
           `;
           container.appendChild(div);
         });
@@ -96,6 +102,61 @@
           button.disabled = false;
           button.textContent = 'Copy SAS URL';
         }, 2000);
+      }
+    }
+
+    function openTagForm(blobName) {
+      const formHtml = `
+        <div id="tagForm">
+          <h3>Set Tags for ${blobName}</h3>
+          <label for="type">Type:</label>
+          <input type="text" id="type" name="type" /><br />
+          <label for="category">Category:</label>
+          <input type="text" id="category" name="category" /><br />
+          <button onclick="submitTags('${blobName}')">Submit</button>
+          <button onclick="closeTagForm()">Cancel</button>
+        </div>
+      `;
+      const container = document.getElementById('toolList');
+      container.innerHTML = formHtml + container.innerHTML;
+    }
+
+    function closeTagForm() {
+      const form = document.getElementById('tagForm');
+      if (form) form.remove();
+    }
+
+    async function submitTags(blobName) {
+      const type = document.getElementById('type').value;
+      const category = document.getElementById('category').value;
+
+      const payload = [
+        {
+          Name: blobName,
+          Tags: {
+            Type: type,
+            Category: category
+          }
+        }
+      ];
+
+      try {
+        const response = await fetch('/api/SetTags', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+          throw new Error(`Server responded with status ${response.status}`);
+        }
+
+        alert('Tags updated successfully!');
+        closeTagForm();
+        location.reload(); // Reload the page after updating tags
+      } catch (err) {
+        alert(`Failed to update tags: ${err.message}`);
+        console.error('Error in submitTags:', err);
       }
     }
 

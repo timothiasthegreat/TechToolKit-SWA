@@ -38,24 +38,42 @@ app.http('ListTools', {
             // Ensure the response is always in the form { tools: [...] }
             let resultArray = [];
             if (Array.isArray(data)) {
-                resultArray = data;
+                resultArray = data.map(item => ({
+                    Name: item.Name,
+                    Tags: item.Tags || {}
+                }));
             } else if (typeof data === 'string') {
                 try {
                     const parsed = JSON.parse(data);
                     if (Array.isArray(parsed)) {
-                        resultArray = parsed;
+                        resultArray = parsed.map(item => ({
+                            Name: item.Name,
+                            Tags: item.Tags || {}
+                        }));
                     } else if (parsed && Array.isArray(parsed.tools)) {
-                        resultArray = parsed.tools;
+                        resultArray = parsed.tools.map(item => ({
+                            Name: item.Name,
+                            Tags: item.Tags || {}
+                        }));
                     } else if (parsed && Array.isArray(parsed.data)) {
-                        resultArray = parsed.data;
+                        resultArray = parsed.data.map(item => ({
+                            Name: item.Name,
+                            Tags: item.Tags || {}
+                        }));
                     }
                 } catch {
                     // Not JSON, ignore
                 }
             } else if (data && Array.isArray(data.tools)) {
-                resultArray = data.tools;
+                resultArray = data.tools.map(item => ({
+                    Name: item.Name,
+                    Tags: item.Tags || {}
+                }));
             } else if (data && Array.isArray(data.data)) {
-                resultArray = data.data;
+                resultArray = data.data.map(item => ({
+                    Name: item.Name,
+                    Tags: item.Tags || {}
+                }));
             }
 
             return {
