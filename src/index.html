@@ -50,9 +50,13 @@
         tools.forEach(tool => {
           const div = document.createElement('div');
           div.className = 'tool';
+
+          const tags = Object.entries(tool.Tags).map(([key, value]) => `<span>${key}: ${value}</span>`).join(', ');
+
           div.innerHTML = `
-            <strong>${tool}</strong>
-            <button onclick="copySasUrl('${tool}', this)">Copy SAS URL</button>
+            <strong>${tool.Name}</strong>
+            <div>Tags: ${tags || 'None'}</div>
+            <button onclick="copySasUrl('${tool.Name}', this)">Copy SAS URL</button>
           `;
           container.appendChild(div);
         });
