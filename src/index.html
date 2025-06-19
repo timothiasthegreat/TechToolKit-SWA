@@ -153,6 +153,7 @@
 
         alert('Tags updated successfully!');
         closeTagForm();
+        location.reload(); // Reload the page after updating tags
       } catch (err) {
         alert(`Failed to update tags: ${err.message}`);
         console.error('Error in submitTags:', err);
