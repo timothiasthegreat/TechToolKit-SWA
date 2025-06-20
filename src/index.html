@@ -9,9 +9,12 @@
     .tool { background: #fff; padding: 1rem; margin-bottom: 1rem; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
     button { margin-left: 1rem; padding: 0.5rem 1rem; }
     #tagForm { background: #fff; padding: 1rem; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 1rem; }
+    #uploadButton { position: absolute; top: 1rem; right: 1rem; padding: 0.5rem 1rem; background: #0078d4; color: #fff; border: none; border-radius: 5px; cursor: pointer; }
+    #uploadButton:hover { background: #005a9e; }
   </style>
 </head>
 <body>
+  <button id="uploadButton" onclick="window.location.href='upload.html'">Upload Tool</button>
   <h1>Available Tools</h1>
   <div id="toolList">Loading...</div>
 

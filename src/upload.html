@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Upload New Tool</title>
+  <style>
+    body { font-family: Arial; margin: 2rem; background: #f9f9f9; }
+    .container { background: #fff; padding: 2rem; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    button { margin-top: 1rem; padding: 0.5rem 1rem; }
+    input[type="file"] { margin-bottom: 1rem; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Upload New Tool</h1>
+    <form id="uploadForm">
+      <label for="fileInput">Select a file to upload:</label>
+      <input type="file" id="fileInput" required title="Choose a file to upload" placeholder="Choose file" />
+      <button type="button" onclick="uploadFile()">Upload</button>
+    </form>
+    <button onclick="returnHome()">Return Home</button>
+  </div>
+
+  <script>
+    async function uploadFile() {
+      const fileInput = document.getElementById('fileInput');
+      const file = fileInput.files[0];
+
+      if (!file) {
+        alert('Please select a file to upload.');
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('file', file);
+
+      try {
+        const response = await fetch(`/api/NewTool?FileName=${encodeURIComponent(file.name)}`, {
+          method: 'POST',
+          body: formData
+        });
+
+        if (!response.ok) {
+          throw new Error(`Server responded with status ${response.status}`);
+        }
+
+        alert('File uploaded successfully!');
+        fileInput.value = ''; // Clear the file input
+      } catch (err) {
+        alert(`Failed to upload file: ${err.message}`);
+        console.error('Error in uploadFile:', err);
+      }
+    }
+
+    function returnHome() {
+      window.location.href = '/';
+    }
+  </script>
+</body>
+</html>
